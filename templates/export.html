@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+{% include 'navbar.html' %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Экспорт данных</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Экспорт данных</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div>
+                <label for="start_date">Начальная дата</label>
+                {{ form.start_date(id="start_date") }}
+            </div>
+            <div>
+                <label for="end_date">Конечная дата</label>
+                {{ form.end_date(id="end_date") }}
+            </div>
+            <div>
+                <button type="submit" class="btn">Экспортировать</button>
+            </div>
+        </form>
+        {% if fires %}
+        <h2>Отфильтрованные инциденты с пожарами</h2>
+        <div class="table-wrapper">
+            <table id="export-table" class="dataTable">
+                <thead>
+                    <tr>
+                        <th>Дата</th>
+                        <th>Регион</th>
+                        <th>Местоположение</th>
+                        <th>Площадь пожара</th>
+                        <th>Площадь лесная</th>
+                        <th>Площадь лесная лесопокрытая</th>
+                        <th>Площадь верховая</th>
+                        <th>Площадь нелесная</th>
+                        <th>АПС флаг</th>
+                        <th>АПС количество людей</th>
+                        <th>АПС количество техники</th>
+                        <th>АПС количество воздушных судов</th>
+                        <th>МЧС флаг</th>
+                        <th>МЧС количество людей</th>
+                        <th>МЧС количество техники</th>
+                        <th>МЧС количество воздушных судов</th>
+                        <th>МИО флаг</th>
+                        <th>МИО количество людей</th>
+                        <th>МИО количество техники</th>
+                        <th>МИО количество воздушных судов</th>
+                        <th>Другие организации флаг</th>
+                        <th>Другие организации количество людей</th>
+                        <th>Другие организации количество техники</th>
+                        <th>Другие организации количество воздушных судов</th>
+                        <th>Описание</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fire in fires %}
+                    <tr>
+                        <td>{{ fire.date }}</td>
+                        <td>{{ fire.region }}</td>
+                        <td>{{ fire.location }}</td>
+                        <td>{{ fire.damage_area }}</td>
+                        <td>{{ fire.damage_les }}</td>
+                        <td>{{ fire.damage_les_lesopokryt }}</td>
+                        <td>{{ fire.damage_les_verh }}</td>
+                        <td>{{ fire.damage_not_les }}</td>
+                        <td>{{ fire.aps_flag }}</td>
+                        <td>{{ fire.aps_people_count }}</td>
+                        <td>{{ fire.aps_technic_count }}</td>
+                        <td>{{ fire.aps_aircraft_count }}</td>
+                        <td>{{ fire.kps_flag }}</td>
+                        <td>{{ fire.kps_people_count }}</td>
+                        <td>{{ fire.kps_technic_count }}</td>
+                        <td>{{ fire.kps_aircraft_count }}</td>
+                        <td>{{ fire.mio_flag }}</td>
+                        <td>{{ fire.mio_people_count }}</td>
+                        <td>{{ fire.mio_technic_count }}</td>
+                        <td>{{ fire.mio_aircraft_count }}</td>
+                        <td>{{ fire.other_org_flag }}</td>
+                        <td>{{ fire.other_org_people_count }}</td>
+                        <td>{{ fire.other_org_technic_count }}</td>
+                        <td>{{ fire.other_org_aircraft_count }}</td>
+                        <td>{{ fire.description }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        <a href="{{ url_for('fire.logout') }}" class="btn">Выйти</a>
+    </div>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'926cceca4e14454b',t:'MTc0MzA1NjY5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

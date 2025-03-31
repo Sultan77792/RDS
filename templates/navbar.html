@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('dashboard.dashboard') }}">РДС МЭПР</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarnav" aria-controls="navbarnav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarnav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'dashboard.dashboard' %}active{% endif %}" href="{{ url_for('dashboard.dashboard') }}">Аналитика</a>
+                </li>
+                {% if current_user.is_authenticated and ('admin' in current_user.roles.split(',') or 'engineer' in current_user.roles.split(',') or 'analyst' in current_user.roles.split(',')) %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'fire.admin_dashboard' %}active{% endif %}" href="{{ url_for('fire.admin_dashboard') }}">Таблица</a>
+                </li>
+                {% endif %}
+                {% if current_user.is_authenticated and ('admin' in current_user.roles.split(',') or 'engineer' in current_user.roles.split(',') or 'operator' in current_user.roles.split(',')) %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'fire.add_fire' %}active{% endif %}" href="{{ url_for('fire.add_fire') }}">Форма</a>
+                </li>
+                {% endif %}
+                {% if current_user.is_authenticated and ('admin' in current_user.roles.split(',') or 'analyst' in current_user.roles.split(',')) %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'fire.export_audit' %}active{% endif %}" href="{{ url_for('fire.export_audit') }}">Экспорт</a>
+                </li>
+                {% endif %}
+                {% if current_user.is_authenticated and 'admin' in current_user.roles.split(',') %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'user_bp.manage_users' %}active{% endif %}" href="{{ url_for('user_bp.manage_users') }}">Управление пользователями</a>
+                </li>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('fire.logout') }}">Выйти</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'926cceca5b8306f2',t:'MTc0MzA1NjY5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

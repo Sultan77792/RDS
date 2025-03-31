@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+{% include 'navbar.html' %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все пожары</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>База данных лесных пожаров РК</h1>
+        <h2>Все пожары</h2>
+        <div class="table-wrapper">
+            <table id="fires-table" class="dataTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Дата</th>
+                        <th>Регион</th>
+                        <th>КГУ/ООПТ</th>
+                        <th>Филиал</th>
+                        <th>Лесничество</th>
+                        <th>Квартал</th>
+                        <th>Выдел</th>
+                        <th>Площадь пожара</th>
+                        <th>Площадь лесная</th>
+                        <th>Площадь лесопокрытая</th>
+                        <th>Площадь верховой</th>
+                        <th>Площадь нелесная</th>
+                        <th>Лесная охрана</th>
+                        <th>Люди ЛО</th>
+                        <th>Техника ЛО</th>
+                        <th>АПС</th>
+                        <th>Люди АПС</th>
+                        <th>Техника АПС</th>
+                        <th>ВС АПС</th>
+                        <th>МЧС</th>
+                        <th>Люди МЧС</th>
+                        <th>Техника МЧС</th>
+                        <th>ВС МЧС</th>
+                        <th>МИО</th>
+                        <th>Люди МИО</th>
+                        <th>Техника МИО</th>
+                        <th>ВС МИО</th>
+                        <th>Др. организации</th>
+                        <th>Люди др.</th>
+                        <th>Техника др.</th>
+                        <th>ВС др.</th>
+                        <th>Описание</th>
+                        <th>Ущерб (тенге)</th>
+                        <th>Затраты</th>
+                        <th>КПО</th>
+                        <th>Файл</th>
+                        {% if current_role != 'analyst' %}
+                        <th>Действия</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fire in fires %}
+                    <tr>
+                        <td>{{ fire.id }}</td>
+                        <td>{{ fire.date }}</td>
+                        <td>{{ fire.region }}</td>
+                        <td>{{ fire.location }}</td>
+                        <td>{{ fire.branch }}</td>
+                        <td>{{ fire.forestry }}</td>
+                        <td>{{ fire.quarter }}</td>
+                        <td>{{ fire.allotment }}</td>
+                        <td>{{ fire.damage_area | format_number }}</td>
+                        <td>{{ fire.damage_les | format_number }}</td>
+                        <td>{{ fire.damage_les_lesopokryt | format_number }}</td>
+                        <td>{{ fire.damage_les_verh | format_number }}</td>
+                        <td>{{ fire.damage_not_les | format_number }}</td>
+                        <td>{{ 'Да' if fire.lo_flag else 'Нет' }}</td>
+                        <td>{{ fire.lo_people_count }}</td>
+                        <td>{{ fire.lo_technic_count }}</td>
+                        <td>{{ 'Да' if fire.aps_flag else 'Нет' }}</td>
+                        <td>{{ fire.aps_people_count }}</td>
+                        <td>{{ fire.aps_technic_count }}</td>
+                        <td>{{ fire.aps_aircraft_count }}</td>
+                        <td>{{ 'Да' if fire.kps_flag else 'Нет' }}</td>
+                        <td>{{ fire.kps_people_count }}</td>
+                        <td>{{ fire.kps_technic_count }}</td>
+                        <td>{{ fire.kps_aircraft_count }}</td>
+                        <td>{{ 'Да' if fire.mio_flag else 'Нет' }}</td>
+                        <td>{{ fire.mio_people_count }}</td>
+                        <td>{{ fire.mio_technic_count }}</td>
+                        <td>{{ fire.mio_aircraft_count }}</td>
+                        <td>{{ 'Да' if fire.other_org_flag else 'Нет' }}</td>
+                        <td>{{ fire.other_org_people_count }}</td>
+                        <td>{{ fire.other_org_technic_count }}</td>
+                        <td>{{ fire.other_org_aircraft_count }}</td>
+                        <td>{{ fire.description }}</td>
+                        <td>{{ fire.damage_tenge | format_number }}</td>
+                        <td>{{ fire.firefighting_costs | format_number }}</td>
+                        <td>{{ fire.kpo }}</td>
+                        <td>
+                            {% if fire.file_path %}
+                            <a href="{{ url_for('fire.download_file', filename=fire.file_path.split('/')[-1]) }}" target="_blank">Скачать</a>
+                            {% else %}
+                            Нет файла
+                            {% endif %}
+                        </td>
+                        {% if current_role != 'analyst' %}
+                        <td>
+                            <a href="{{ url_for('fire.edit_fire', fire_id=fire.id) }}">Редактировать</a>
+                            {% if 'admin' in current_role.split(',') %}
+                            <form action="{{ url_for('fire.delete_fire', fire_id=fire.id) }}" method="post" style="display:inline;">
+                                <button type="submit" class="btn" onclick="return confirm('Вы уверены, что хотите удалить эту запись?');">Удалить</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if 'admin' in current_role.split(',') %}
+        <h2>Журнал событий</h2>
+        <div class="table-wrapper">
+            <table id="audit-log-table" class="dataTable">
+                <thead>
+                    <tr>
+                        <th>Время</th>
+                        <th>Пользователь</th>
+                        <th>Действие</th>
+                        <th>Таблица</th>
+                        <th>ID записи</th>
+                        <th>Изменения</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in audit_logs %}
+                    <tr>
+                        <td>{{ log.timestamp }}</td>
+                        <td>{{ log.username }}</td>
+                        <td>{{ log.action }}</td>
+                        <td>{{ log.table_name }}</td>
+                        <td>{{ log.record_id }}</td>
+                        <td>{{ log.changes }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="export-button-wrapper">
+            <a href="{{ url_for('fire.export_audit') }}" class="btn">Экспорт журнала событий</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

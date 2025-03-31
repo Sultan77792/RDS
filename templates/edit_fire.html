@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+{% include 'navbar.html' %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование данных о пожаре</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Редактировать пожар</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div>
+                <label for="date">Дата пожара</label>
+                {{ form.date(type="date", id="date", value=fire.date.strftime('%Y-%m-%d') if fire.date else '') }}
+                {% if form.date.errors %}
+                    <span class="text-danger">{{ form.date.errors[0] }}</span>
+                {% endif %}
+            </div>
+            <div>
+                <label for="region">Регион</label>
+                {{ form.region(id="region", class="form-control") }}
+            </div>
+            <div>
+                <label for="location">КГУ/ООПТ</label>
+                {{ form.location(id="location", class="form-control") }}
+            </div>
+            <div>
+                <label for="branch">Филиал</label>
+                {{ form.branch(id="branch") }}
+            </div>
+            <div>
+                <label for="forestry">Лесничество</label>
+                {{ form.forestry(id="forestry") }}
+            </div>
+            <div>
+                <label for="quarter">Квартал</label>
+                {{ form.quarter(id="quarter") }}
+            </div>
+            <div>
+                <label for="allotment">Выдел</label>
+                {{ form.allotment(id="allotment") }}
+            </div>
+            <div>
+                <label for="damage_area">Площадь пожара (га)</label>
+                {{ form.damage_area(id="damage_area") }}
+                {% if form.damage_area.errors %}
+                    <span class="text-danger">{{ form.damage_area.errors[0] }}</span>
+                {% endif %}
+            </div>
+            <div>
+                <label for="damage_les">Из них площадь пожара в лесной зоне (га)</label>
+                {{ form.damage_les(id="damage_les") }}
+                {% if form.damage_les.errors %}
+                    <span class="text-danger">{{ form.damage_les.errors[0] }}</span>
+                {% endif %}
+            </div>
+            <div>
+                <label for="damage_les_lesopokryt">Из них площадь пожара в лесной лесопокрытой зоне (га)</label>
+                {{ form.damage_les_lesopokryt(id="damage_les_lesopokryt") }}
+                {% if form.damage_les_lesopokryt.errors %}
+                    <span class="text-danger">{{ form.damage_les_lesopokryt.errors[0] }}</span>
+                {% endif %}
+            </div>
+            <div>
+                <label for="damage_les_verh">Из них площадь пожара верхового (га)</label>
+                {{ form.damage_les_verh(id="damage_les_verh") }}
+                {% if form.damage_les_verh.errors %}
+                    <span class="text-danger">{{ form.damage_les_verh.errors[0] }}</span>
+                {% endif %}
+            </div>
+            <div>
+                <label for="damage_not_les">Из них площадь пожара нелесная (га)</label>
+                {{ form.damage_not_les(id="damage_not_les") }}
+                {% if form.damage_not_les.errors %}
+                    <span class="text-danger">{{ form.damage_not_les.errors[0] }}</span>
+                {% endif %}
+            </div>
+            <div>
+                <label for="lo_flag">Лесная охрана</label>
+                {{ form.lo_flag(id="lo_flag", onchange="toggleFields()") }}
+            </div>
+            <div id="lo_fields" class="hidden">
+                <div>
+                    <label for="lo_people_count">Количество людей</label>
+                    {{ form.lo_people_count(id="lo_people_count") }}
+                </div>
+                <div>
+                    <label for="lo_technic_count">Количество техники</label>
+                    {{ form.lo_technic_count(id="lo_technic_count") }}
+                </div>
+            </div>
+            <div>
+                <label for="aps_flag">АПС</label>
+                {{ form.aps_flag(id="aps_flag", onchange="toggleFields()") }}
+            </div>
+            <div id="aps_fields" class="hidden">
+                <div>
+                    <label for="aps_people_count">Количество людей</label>
+                    {{ form.aps_people_count(id="aps_people_count") }}
+                </div>
+                <div>
+                    <label for="aps_technic_count">Количество техники</label>
+                    {{ form.aps_technic_count(id="aps_technic_count") }}
+                </div>
+                <div>
+                    <label for="aps_aircraft_count">Количество воздушных судов</label>
+                    {{ form.aps_aircraft_count(id="aps_aircraft_count") }}
+                </div>
+            </div>
+            <div>
+                <label for="kps_flag">МЧС</label>
+                {{ form.kps_flag(id="kps_flag", onchange="toggleFields()") }}
+            </div>
+            <div id="kps_fields" class="hidden">
+                <div>
+                    <label for="kps_people_count">Количество людей</label>
+                    {{ form.kps_people_count(id="kps_people_count") }}
+                </div>
+                <div>
+                    <label for="kps_technic_count">Количество техники</label>
+                    {{ form.kps_technic_count(id="kps_technic_count") }}
+                </div>
+                <div>
+                    <label for="kps_aircraft_count">Количество воздушных судов</label>
+                    {{ form.kps_aircraft_count(id="kps_aircraft_count") }}
+                </div>
+            </div>
+            <div>
+                <label for="mio_flag">МИО</label>
+                {{ form.mio_flag(id="mio_flag", onchange="toggleFields()") }}
+            </div>
+            <div id="mio_fields" class="hidden">
+                <div>
+                    <label for="mio_people_count">Количество людей</label>
+                    {{ form.mio_people_count(id="mio_people_count") }}
+                </div>
+                <div>
+                    <label for="mio_technic_count">Количество техники</label>
+                    {{ form.mio_technic_count(id="mio_technic_count") }}
+                </div>
+                <div>
+                    <label for="mio_aircraft_count">Количество воздушных судов</label>
+                    {{ form.mio_aircraft_count(id="mio_aircraft_count") }}
+                </div>
+            </div>
+            <div>
+                <label for="other_org_flag">Другие организации</label>
+                {{ form.other_org_flag(id="other_org_flag", onchange="toggleFields()") }}
+            </div>
+            <div id="other_org_fields" class="hidden">
+                <div>
+                    <label for="other_org_people_count">Количество людей</label>
+                    {{ form.other_org_people_count(id="other_org_people_count") }}
+                </div>
+                <div>
+                    <label for="other_org_technic_count">Количество техники</label>
+                    {{ form.other_org_technic_count(id="other_org_technic_count") }}
+                </div>
+                <div>
+                    <label for="other_org_aircraft_count">Количество воздушных судов</label>
+                    {{ form.other_org_aircraft_count(id="other_org_aircraft_count") }}
+                </div>
+            </div>
+            <div>
+                <label for="description">Описание</label>
+                {{ form.description(id="description") }}
+                {% if form.description.errors %}
+                    <span class="text-danger">{{ form.description.errors[0] }}</span>
+                {% endif %}
+            </div>
+            <div>
+                <label for="damage_tenge">Ущерб (тенге)</label>
+                {{ form.damage_tenge(id="damage_tenge") }}
+            </div>
+            <div>
+                <label for="firefighting_costs">Затраты на тушение</label>
+                {{ form.firefighting_costs(id="firefighting_costs") }}
+            </div>
+            <div>
+                <label for="kpo">КПО</label>
+                {{ form.kpo(id="kpo") }}
+            </div>
+            <div>
+                <label for="file">Загрузить файл</label>
+                {{ form.file(id="file") }}
+                {% if form.file.errors %}
+                    <span class="text-danger">{{ form.file.errors[0] }}</span>
+                {% endif %}
+            </div>
+            {% if fire.file_path %}
+            <div>
+                <label>Текущий файл</label>
+                <a href="{{ url_for('fire.download_file', filename=fire.file_path) }}">{{ fire.file_path.split('/')[-1] }}</a>
+            </div>
+            {% endif %}
+            <div>
+                <button type="submit" class="btn">Сохранить изменения</button>
+            </div>
+        </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const regionsAndLocations = {{ regions_and_locations|tojson|safe }};
+            const regionSelect = document.getElementById("region");
+            const locationSelect = document.getElementById("location");
+
+            if (!regionSelect || !locationSelect) {
+                console.error("regionSelect или locationSelect не найдены");
+                return;
+            }
+
+            if (!regionsAndLocations || typeof regionsAndLocations !== 'object') {
+                console.warn("regionsAndLocations не определён или некорректен, используется пустой объект");
+                window.regionsAndLocations = {};
+            } else {
+                window.regionsAndLocations = regionsAndLocations;
+            }
+
+            // Инициализация при загрузке
+            const initialRegion = regionSelect.value;
+            if (initialRegion) {
+                updateLocations(initialRegion);
+                // Устанавливаем текущее значение location
+                const initialLocation = {{ fire.location|tojson|safe }};
+                if (initialLocation) {
+                    locationSelect.value = initialLocation;
+                }
+            }
+
+            function updateLocations(region) {
+                const locations = window.regionsAndLocations[region] || [];
+                locationSelect.innerHTML = '<option value="">Выберите КГУ/ООПТ</option>';
+                locations.forEach(location => {
+                    const option = document.createElement("option");
+                    option.value = location;
+                    option.textContent = location;
+                    locationSelect.appendChild(option);
+                });
+            }
+
+            regionSelect.addEventListener("change", function () {
+                const selectedRegion = regionSelect.value;
+                if (selectedRegion) {
+                    updateLocations(selectedRegion);
+                } else {
+                    locationSelect.innerHTML = '<option value="">Выберите КГУ/ООПТ</option>';
+                }
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'926ccec7ce3c4532',t:'MTc0MzA1NjY5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>
