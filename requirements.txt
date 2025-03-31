@@ -1,0 +1,14 @@
+Flask==3.0.0
+Flask-SQLAlchemy==3.0.5
+Flask-Login==0.6.3
+Flask-Migrate==4.0.7
+Flask-WTF==1.2.1
+dash==2.17.0
+pandas==2.2.2
+plotly==5.22.0
+Werkzeug==3.0.3
+PyMySQL==1.1.1
+WTForms==3.1.2
+alembic
+marshmallow
+tenacity==9.0.0
